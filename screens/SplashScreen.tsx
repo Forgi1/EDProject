@@ -1,15 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
 
-const SplashScreen = () => {
+const SplashScreen = ({ navigation }: { navigation: any }) => {
   const [dots, setDots] = useState('.');
+
+  // Navigate to AuthScreen after 3 seconds
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      navigation.replace('Auth'); // Navigate to Auth screen
+    }, 3000); // 3 seconds delay
+
+    return () => clearTimeout(timer); // Cleanup timer
+  }, [navigation]);
 
   useEffect(() => {
     const dotsTimer = setInterval(() => {
       setDots((prev) => (prev.length < 3 ? prev + '.' : '.'));
     }, 500);
 
-    return () => clearInterval(dotsTimer);
+    return () => clearInterval(dotsTimer); // Cleanup dots animation
   }, []);
 
   return (
@@ -28,7 +37,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#4CAF50',
+    backgroundColor: '#f5f5f5',
   },
   logo: {
     width: 150,
@@ -37,7 +46,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 24,
-    color: '#ffffff',
+    color: '#000000',
     fontWeight: 'bold',
   },
 });
