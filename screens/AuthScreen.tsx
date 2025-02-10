@@ -23,8 +23,9 @@ const AuthScreen = ({ navigation }: { navigation: any }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Login to edProject</Text>
-      <Button title="Login with Auth0" onPress={login} />
+      <Text style={styles.title}>SafePath Indoor Navigator</Text>
+      <Text style={styles.subheading}>Your guide to  seamless indoor navigation</Text>
+      <Button title="Login with Auth0 to continue" onPress={login} />
     </View>
   );
 };
@@ -39,6 +40,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: 'bold',
+    marginBottom: 20,
+  },
+  subheading: {
+    fontSize: 18,
+    color: '#666',
     marginBottom: 20,
   },
 });
