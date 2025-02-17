@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Auth0 from 'react-native-auth0';
 
 const auth0 = new Auth0({
@@ -23,9 +23,46 @@ const AuthScreen = ({ navigation }: { navigation: any }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>SafePath Indoor Navigator</Text>
-      <Text style={styles.subheading}>Your guide to  seamless indoor navigation</Text>
-      <Button title="Login with Auth0 to continue" onPress={login} />
+      {/* Title */}
+      <Text style={styles.title}>
+        Welcome to <Text style={styles.titleHighlight}>SafePath</Text>
+      </Text>
+
+      {/* Feature List */}
+      <View style={styles.featureContainer}>
+        <Text style={styles.featureTitle}>♿ Seamless indoor navigation </Text>
+        <Text style={styles.featureDescription}>
+            Get step-by-step directions to your destination targeted towards people with disabilities.
+        </Text>
+      </View>
+
+      <View style={styles.featureContainer}>
+        <Text style={styles.featureTitle}>🔎 SCAN</Text>
+        <Text style={styles.featureDescription}>
+          Prompt the scanning process and display any availble scans.
+        </Text>
+      </View>
+
+      <View style={styles.featureContainer}>
+        <Text style={styles.featureTitle}>🧭 NAVIGATE</Text>
+        <Text style={styles.featureDescription}>
+          Navigate the area with an optimzed map along with haptic feedback to match your needs.
+        </Text>
+      </View>
+
+      {/* Terms & Privacy */}
+      <View style={styles.termsContainer}>
+        <Text style={styles.termsText}>
+          By pressing continue, you agree to our{' '}
+          <Text style={styles.link}>Terms of Service</Text> and that you have read our{' '}
+          <Text style={styles.link}>Privacy Policy</Text>.
+        </Text>
+      </View>
+
+      {/* Continue Button */}
+      <TouchableOpacity style={styles.continueButton} onPress={login}>
+        <Text style={styles.continueButtonText}>Continue</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -33,19 +70,58 @@ const AuthScreen = ({ navigation }: { navigation: any }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#f9f9f9',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f5f5f5',
+    paddingHorizontal: 20,
   },
   title: {
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: 'bold',
-    marginBottom: 20,
+    textAlign: 'center',
+    marginBottom: 30,
   },
-  subheading: {
+  titleHighlight: {
+    color: '#007BFF',
+  },
+  featureContainer: {
+    width: '100%',
+    marginBottom: 15,
+  },
+  featureTitle: {
     fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  featureDescription: {
+    fontSize: 14,
     color: '#666',
-    marginBottom: 20,
+  },
+  termsContainer: {
+    marginTop: 20,
+    alignItems: 'center',
+    paddingHorizontal: 15,
+  },
+  termsText: {
+    fontSize: 12,
+    color: '#777',
+    textAlign: 'center',
+  },
+  link: {
+    color: '#007BFF',
+    fontWeight: 'bold',
+  },
+  continueButton: {
+    backgroundColor: '#007BFF',
+    paddingVertical: 15,
+    paddingHorizontal: 100,
+    borderRadius: 8,
+    marginTop: 20,
+  },
+  continueButtonText: {
+    color: '#FFF',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 
