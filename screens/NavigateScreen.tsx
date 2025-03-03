@@ -4,7 +4,7 @@ import { View, Text, StyleSheet } from 'react-native';
 const NavigateScreen = () => {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Navigate Room Feature Coming Soon!</Text>
+      <Text style={styles.text}>No Scans are currently available</Text>
     </View>
   );
 };

@@ -1,10 +1,20 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
 const ScanScreen = () => {
+  const [dots, setDots] = useState('');
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setDots((prevDots) => (prevDots.length < 3 ? prevDots + '.' : ''));
+    }, 500);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Scan Room Feature Coming Soon!</Text>
+      <Text style={styles.text}>Scanning in process{dots}</Text>
     </View>
   );
 };
