@@ -1,12 +1,10 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import BottomTabNavigator from '../components/BottomTabNavigator';
 
-const ScanScreen = ({ navigation }: { navigation: any }) => {
+const SettingsScreen = () => {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Scan Room Screen</Text>
-      <BottomTabNavigator navigation={navigation} />
+      <Text style={styles.text}>=Coming Soon</Text>
     </View>
   );
 };
@@ -16,12 +14,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: '#f5f5f5',
   },
   text: {
     fontSize: 20,
-    fontWeight: 'bold',
   },
 });
 
-export default ScanScreen;
+export default SettingsScreen;
