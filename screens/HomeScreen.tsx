@@ -1,19 +1,14 @@
+
 import React from 'react';
 import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
   FlatList,
   Image,
+  TouchableOpacity,
 } from 'react-native';
 import BottomTabNavigator from '../components/BottomTabNavigator';
-import Auth0 from 'react-native-auth0';
-
-const auth0 = new Auth0({
-  domain: 'dev-80ygjdkjffz4caq0.us.auth0.com',
-  clientId: 'CFOOjLsPj1SIsXZcA2Tc5r0shChPouM5',
-});
 
 const tripSuggestions = [
   {
@@ -33,33 +28,23 @@ const tripSuggestions = [
     title: 'Settings',
     subtitle: 'Customize your SafePath experience',
     image: require('../assets/settings.png'),
+    navigateTo: 'Settings',
   },
 ];
 
 const HomeScreen = ({ navigation }: { navigation: any }) => {
-  const logout = async () => {
-    try {
-      await auth0.webAuth.clearSession({
-        federated: true,
-      });
-      navigation.replace('Auth');
-    } catch (error) {
-      console.error('Logout failed:', JSON.stringify(error, null, 2));
+  const handleCardPress = (item: any) => {
+    if (item.navigateTo) {
+      navigation.navigate(item.navigateTo);
     }
   };
 
   return (
     <View style={styles.container}>
-      {/* Curved Background with Logout Button */}
       <View style={styles.curvedBackground}>
-        <TouchableOpacity onPress={logout} style={styles.logoutButton}>
-          <Text style={styles.logoutText}>Logout</Text>
-        </TouchableOpacity>
-
         <Text style={styles.title}>SafePath</Text>
       </View>
 
-      {/* Scrollable Suggestions Section */}
       <View style={{ marginTop: 20 }}>
         <Text style={styles.sectionTitle}>Plan your next move</Text>
         <FlatList
@@ -68,16 +53,19 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
           showsHorizontalScrollIndicator={false}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
-            <View style={styles.card}>
+            <TouchableOpacity
+              style={styles.card}
+              onPress={() => handleCardPress(item)}
+              activeOpacity={0.8}
+            >
               <Image source={item.image} style={styles.cardImage} />
               <Text style={styles.cardTitle}>{item.title}</Text>
               <Text style={styles.cardSubtitle}>{item.subtitle}</Text>
-            </View>
+            </TouchableOpacity>
           )}
         />
       </View>
 
-      {/* Bottom Navigation */}
       <BottomTabNavigator navigation={navigation} />
     </View>
   );
@@ -92,7 +80,7 @@ const styles = StyleSheet.create({
   curvedBackground: {
     width: '100%',
     height: 250,
-    backgroundColor: '#302f30',
+    backgroundColor: '#1e1e1e',
     borderBottomLeftRadius: 150,
     borderBottomRightRadius: 150,
     justifyContent: 'center',
@@ -101,22 +89,8 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 25,
-    fontFamily: 'San Francisco', // Optional: custom font
+    fontFamily: 'San Francisco',
     color: '#fff',
-  },
-  logoutButton: {
-    position: 'absolute',
-    top: 50,
-    left: 20,
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    backgroundColor: 'rgba(255, 0, 0, 0.8)',
-    borderRadius: 10,
-  },
-  logoutText: {
-    fontSize: 14,
-    color: '#fff',
-    fontWeight: 'bold',
   },
   sectionTitle: {
     fontSize: 18,

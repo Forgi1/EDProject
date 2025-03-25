@@ -1,8 +1,22 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Switch, Vibration, Platform } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Switch,
+  Vibration,
+  Platform,
+  TouchableOpacity,
+} from 'react-native';
 import Tts from 'react-native-tts';
+import Auth0 from 'react-native-auth0';
 
-const SettingsScreen = () => {
+const auth0 = new Auth0({
+  domain: 'dev-80ygjdkjffz4caq0.us.auth0.com',
+  clientId: 'CFOOjLsPj1SIsXZcA2Tc5r0shChPouM5',
+});
+
+const SettingsScreen = ({ navigation }: { navigation: any }) => {
   const [voiceEnabled, setVoiceEnabled] = useState(false);
   const [vibrationEnabled, setVibrationEnabled] = useState(false);
 
@@ -10,12 +24,9 @@ const SettingsScreen = () => {
     setVoiceEnabled(value);
     if (value) {
       Tts.setDefaultLanguage('en-US');
-
-      // ✅ Safe: only set rate on Android
       if (Platform.OS === 'android') {
         Tts.setDefaultRate(0.5);
       }
-
       Tts.setDefaultPitch(1.0);
       Tts.speak('Hello, welcome to SafePath');
     }
@@ -24,7 +35,16 @@ const SettingsScreen = () => {
   const toggleVibration = (value: boolean) => {
     setVibrationEnabled(value);
     if (value) {
-      Vibration.vibrate(300); // brief test vibration
+      Vibration.vibrate(300);
+    }
+  };
+
+  const logout = async () => {
+    try {
+      await auth0.webAuth.clearSession({ federated: true });
+      navigation.replace('Auth'); // Redirect to Auth/Login screen
+    } catch (error) {
+      console.error('Logout failed:', JSON.stringify(error, null, 2));
     }
   };
 
@@ -41,6 +61,10 @@ const SettingsScreen = () => {
         <Text style={styles.label}>Vibration</Text>
         <Switch value={vibrationEnabled} onValueChange={toggleVibration} />
       </View>
+
+      <TouchableOpacity style={styles.logoutButton} onPress={logout}>
+        <Text style={styles.logoutText}>Logout</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -68,6 +92,18 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 18,
+  },
+  logoutButton: {
+    marginTop: 40,
+    backgroundColor: '#ff4444',
+    paddingVertical: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  logoutText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 
