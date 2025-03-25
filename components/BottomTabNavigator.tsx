@@ -11,11 +11,7 @@ const BottomTabNavigator = ({ navigation }: { navigation: any }) => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        style={[styles.tabButton, activeTab === 'Home' && styles.activeTab]}
-        onPress={() => navigateTo('Home')}>
-        <Text style={[styles.tabText, activeTab === 'Home' && styles.activeTabText]}> Home</Text>
-      </TouchableOpacity>
+      
 
       <TouchableOpacity
         style={[styles.tabButton, activeTab === 'Scan' && styles.activeTab]}
@@ -48,7 +44,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     height: 70,
-    backgroundColor: '#fff',
+    backgroundColor: '#121212',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     elevation: 10, // Shadow for Android
@@ -67,7 +63,7 @@ const styles = StyleSheet.create({
     color: '#666',
   },
   activeTab: {
-    backgroundColor: '#007BFF',
+    backgroundColor: '#302f30',
     borderRadius: 10,
     paddingVertical: 8,
     paddingHorizontal: 15,
