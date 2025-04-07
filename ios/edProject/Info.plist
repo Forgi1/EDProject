@@ -60,9 +60,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>UIAppFonts</key>
-	<array>
-		<string>Tektur-Black.ttf</string>
-	</array>
 </dict>
 </plist>

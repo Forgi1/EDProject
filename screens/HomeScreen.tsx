@@ -14,7 +14,7 @@ const tripSuggestions = [
   {
     id: '1',
     title: 'Scan Area',
-    subtitle: 'Look for nearby SafePath zones',
+    subtitle: 'Look for availible SafePath scans',
     image: require('../assets/scan.png'),
   },
   {
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   curvedBackground: {
-    width: '100%',
+    width: '110%',
     height: 250,
     backgroundColor: '#1e1e1e',
     borderBottomLeftRadius: 150,

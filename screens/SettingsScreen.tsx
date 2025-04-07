@@ -74,13 +74,14 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 80,
     paddingHorizontal: 20,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#121212',
   },
   header: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 30,
     textAlign: 'center',
+    color: '#FFFFFF',
   },
   settingRow: {
     flexDirection: 'row',
@@ -92,6 +93,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 18,
+    color: '#FFFFFF',
   },
   logoutButton: {
     marginTop: 40,
