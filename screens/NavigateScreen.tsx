@@ -41,7 +41,7 @@ const NavigateScreen = () => {
       <TouchableWithoutFeedback onPress={handleMapPress}>
         <View style={styles.mapContainer}>
           <Image
-            source={require('../assets/scan1.png')}  
+            source={require('../assets/scan1.png')}  // 👈 your only scan
             style={styles.mapImage}
             resizeMode="contain"
           />
@@ -124,3 +124,4 @@ const styles = StyleSheet.create({
 });
 
 export default NavigateScreen;
+

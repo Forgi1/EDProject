@@ -15,12 +15,14 @@ if linkage != nil
 end
 
 target 'edProject' do
+  use_frameworks! :linkage => :static   # <= ADD THIS
   config = use_native_modules!
 
   use_react_native!(
     :path => config[:reactNativePath],
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
+
 
   target 'edProjectTests' do
     inherit! :complete
