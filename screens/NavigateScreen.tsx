@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, Image, StyleSheet, TouchableWithoutFeedback } from 'react-native';
 import Svg, { Polyline } from 'react-native-svg';
 
@@ -6,6 +6,7 @@ const NavigateScreen = () => {
   const [start, setStart] = useState<{ x: number; y: number } | null>(null);
   const [goal, setGoal] = useState<{ x: number; y: number } | null>(null);
   const [fakePath, setFakePath] = useState<{ x: number; y: number }[]>([]);
+  const [visiblePath, setVisiblePath] = useState<{ x: number; y: number }[]>([]);
 
   const handleMapPress = (event: any) => {
     const { locationX, locationY } = event.nativeEvent;
@@ -17,9 +18,15 @@ const NavigateScreen = () => {
       setGoal({ x: locationX, y: locationY });
       console.log('Goal set at:', locationX, locationY);
 
-      // Fake a path once both start and goal are set
       const path = generateFakePath(start, { x: locationX, y: locationY });
       setFakePath(path);
+    } else {
+      // Reset everything on third tap
+      setStart({ x: locationX, y: locationY });
+      setGoal(null);
+      setFakePath([]);
+      setVisiblePath([]);
+      console.log('Markers reset. New start set at:', locationX, locationY);
     }
   };
 
@@ -33,6 +40,27 @@ const NavigateScreen = () => {
     }
     return points;
   };
+
+  const calculateDistance = (p1: { x: number; y: number }, p2: { x: number; y: number }) => {
+    const dx = p2.x - p1.x;
+    const dy = p2.y - p1.y;
+    return Math.sqrt(dx * dx + dy * dy);
+  };
+
+  useEffect(() => {
+    if (fakePath.length > 0) {
+      let i = 0;
+      const interval = setInterval(() => {
+        if (i < fakePath.length) {
+          setVisiblePath(fakePath.slice(0, i + 1));
+          i++;
+        } else {
+          clearInterval(interval);
+        }
+      }, 30); // 30ms delay between points for smooth animation
+      return () => clearInterval(interval);
+    }
+  }, [fakePath]);
 
   return (
     <View style={styles.container}>
@@ -50,11 +78,11 @@ const NavigateScreen = () => {
           {start && <View style={[styles.marker, { top: start.y - 10, left: start.x - 10 }]} />}
           {goal && <View style={[styles.goalMarker, { top: goal.y - 10, left: goal.x - 10 }]} />}
 
-          {/* Fake path line */}
-          {fakePath.length > 0 && (
+          {/* Animated path */}
+          {visiblePath.length > 0 && (
             <Svg style={StyleSheet.absoluteFill}>
               <Polyline
-                points={fakePath.map(p => `${p.x},${p.y}`).join(' ')}
+                points={visiblePath.map(p => `${p.x},${p.y}`).join(' ')}
                 fill="none"
                 stroke="blue"
                 strokeWidth="3"
@@ -71,6 +99,13 @@ const NavigateScreen = () => {
           <Text style={styles.text}>Tap again to set your destination 🎯</Text>
         ) : (
           <Text style={styles.text}>Path is ready! ✅</Text>
+        )}
+
+        {/* Show distance when both markers are placed */}
+        {start && goal && (
+          <Text style={styles.text}>
+            Distance: {calculateDistance(start, goal).toFixed(2)} px
+          </Text>
         )}
       </View>
     </View>
@@ -93,7 +128,7 @@ const styles = StyleSheet.create({
     width: '90%',
     height: '70%',
     position: 'relative',
-    backgroundColor: '#1e1e1e', // optional background behind image
+    backgroundColor: '#1e1e1e', // background behind image
   },
   mapImage: {
     width: '100%',
@@ -124,4 +159,5 @@ const styles = StyleSheet.create({
 });
 
 export default NavigateScreen;
+
 

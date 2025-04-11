@@ -73,11 +73,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 40,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#121212',
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
+    color: '#FFFFFF',
     alignSelf: 'center',
     marginBottom: 20,
   },
