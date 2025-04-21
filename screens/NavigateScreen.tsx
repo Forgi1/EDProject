@@ -116,13 +116,21 @@ const couchCells = [
 
 ];
 
+const bounderies=[[24, 36], [24, 37], [24, 38],
+[23, 36], [23, 37], [23, 38],
+[22, 36], [22, 37], [22, 38],
+[21, 36], [21, 37], [21, 38],
+[20, 36], [20, 37], [20, 38],
+[19, 36], [19, 37], [19, 38],
+[38, 20], [38, 21], [38, 22]]
+
 // Paint obstacles
 table1Cells.forEach(([row, col]) => initialGrid[row][col] = 1);
 table2Cells.forEach(([row, col]) => initialGrid[row][col] = 1);
 bookshelfCells.forEach(([row, col]) => initialGrid[row][col] = 1);
 bookshelf2Cells.forEach(([row, col]) => initialGrid[row][col] = 1);
 couchCells.forEach(([row, col]) => initialGrid[row][col] = 1);
-
+bounderies.forEach(([row, col]) => initialGrid[row][col] = 1);
 // === NavigateScreen Component ===
 const NavigateScreen = () => {
   const [start, setStart] = useState<{ x: number; y: number } | null>(null);
@@ -134,40 +142,50 @@ const NavigateScreen = () => {
 
   const handleMapPress = (event: any) => {
     const { locationX, locationY } = event.nativeEvent;
-
+  
     const col = Math.floor(locationX / CELL_SIZE);
     const row = Math.floor(locationY / CELL_SIZE);
-
+  
+    // ⛔️ Don't allow clicks outside the visible white scan area (e.g., above row 24)
+    if (row < 24 || row > 38) {
+      console.log(`Ignored tap at (${row}, ${col}) - outside white scan area`);
+      return;
+    }
+  
     if (!start) {
       setStart({ x: col, y: row });
     } else if (!goal) {
       setGoal({ x: col, y: row });
-
+  
       const gridBackup = new PF.Grid(expandedGrid(initialGrid));
       const finder = new PF.AStarFinder({
         allowDiagonal: true,
         heuristic: PF.Heuristic.manhattan,
       });
-
+  
       const path = finder.findPath(start.x, start.y, col, row, gridBackup);
-
+  
       const pixelPath = path.map(([gridX, gridY]: [number, number]) => ({
         x: gridX * CELL_SIZE + CELL_SIZE / 2,
         y: gridY * CELL_SIZE + CELL_SIZE / 2,
       }));
-
+  
       setFakePath(pixelPath);
       setModalVisible(true);
+    } else {
+      // Reset on third tap
+      setStart({ x: col, y: row });
+      setGoal(null);
+      setFakePath([]);
+      setVisiblePath([]);
     }
   };
-
   const handleReset = () => {
     setStart(null);
     setGoal(null);
     setFakePath([]);
     setVisiblePath([]);
-    setModalVisible(false);
-  };
+  };  
 
   const calculateDistance = (p1: { x: number; y: number }, p2: { x: number; y: number }) => {
     const dx = p2.x - p1.x;
@@ -229,7 +247,7 @@ const NavigateScreen = () => {
             resizeMode="contain"
           />
           {/* Draw the red box */}
-{/* 
+{/*
 {expandedGrid(initialGrid).map((row, rowIndex) =>
   row.map((cell, colIndex) =>
     cell === 1 ? (
@@ -253,7 +271,7 @@ const NavigateScreen = () => {
 
 {/* Draw the grid */}
 
- {/*
+ 
 {Array(NUM_ROWS).fill(0).map((_, rowIndex) =>
   Array(NUM_COLS).fill(0).map((_, colIndex) => (
     <View
@@ -270,7 +288,7 @@ const NavigateScreen = () => {
     />
   ))
 )}
-*/}
+
 
 
 
