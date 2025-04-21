@@ -193,6 +193,20 @@ const NavigateScreen = () => {
     return Math.sqrt(dx * dx + dy * dy);
   };
 
+  const calculatePathDistanceInFeet = (path: { x: number; y: number }[]): number => {
+    let total = 0;
+    for (let i = 1; i < path.length; i++) {
+      const dx = path[i].x - path[i - 1].x;
+      const dy = path[i].y - path[i - 1].y;
+      const distPixels = Math.sqrt(dx * dx + dy * dy);
+      total += distPixels;
+    }
+  
+    const feetPerPixel = 1.2;
+    return total * feetPerPixel/9;
+  };
+  
+
   const expandedGrid = (grid: number[][]) => {
     if (!wheelchairMode) return grid; // Regular mode
 
@@ -271,7 +285,7 @@ const NavigateScreen = () => {
 
 {/* Draw the grid */}
 
- 
+ {/*
 {Array(NUM_ROWS).fill(0).map((_, rowIndex) =>
   Array(NUM_COLS).fill(0).map((_, colIndex) => (
     <View
@@ -289,7 +303,7 @@ const NavigateScreen = () => {
   ))
 )}
 
-
+*/}
 
 
           {/* Start Marker */}
@@ -327,14 +341,12 @@ const NavigateScreen = () => {
         )}
 
         {/* Distance */}
-        {start && goal && (
-          <Text style={styles.text}>
-            Distance: {calculateDistance(
-              { x: start.x * CELL_SIZE, y: start.y * CELL_SIZE },
-              { x: goal.x * CELL_SIZE, y: goal.y * CELL_SIZE }
-            ).toFixed(2)} px
-          </Text>
-        )}
+        {visiblePath.length > 1 && (
+  <Text style={styles.text}>
+    Distance: {calculatePathDistanceInFeet(visiblePath).toFixed(1)} ft
+  </Text>
+)}
+
 
         {/* Reset Button */}
         {start && goal && (
