@@ -1,0 +1,61 @@
+// utils/useDeadReckoning.ts
+import { useEffect, useRef, useState } from 'react';
+import { Accelerometer, Magnetometer } from 'expo-sensors';
+
+const STEP_THRESHOLD = 1.2;      // Threshold for detecting a step
+const STEP_LENGTH = 0.7;         // Approximate step length in meters
+
+type Position = { x: number; y: number };
+
+export default function useDeadReckoning(): Position {
+  const [position, setPosition] = useState<Position>({ x: 0, y: 0 });
+  const lastAccel = useRef<{ x: number; y: number; z: number } | null>(null);
+  const lastMag = useRef<{ x: number; y: number; z: number } | null>(null);
+  const prevMagnitude = useRef<number>(0);
+  const stepCooldown = useRef<number>(0);
+
+  useEffect(() => {
+    let accelSub = Accelerometer.addListener(accelData => {
+      const { x, y, z } = accelData;
+      const magnitude = Math.sqrt(x ** 2 + y ** 2 + z ** 2);
+
+      const delta = magnitude - prevMagnitude.current;
+      prevMagnitude.current = magnitude;
+
+      // Simple step detection with cooldown to prevent multiple triggers
+      if (delta > STEP_THRESHOLD && stepCooldown.current <= 0) {
+        const heading = calculateHeading(lastMag.current);
+        setPosition(prev => ({
+          x: prev.x + STEP_LENGTH * Math.cos(heading),
+          y: prev.y + STEP_LENGTH * Math.sin(heading),
+        }));
+        stepCooldown.current = 10; // cooldown frames
+        console.log(`Step detected → New Position: (${position.x.toFixed(2)}, ${position.y.toFixed(2)})`);
+      } else {
+        stepCooldown.current = Math.max(0, stepCooldown.current - 1);
+      }
+    });
+
+    let magSub = Magnetometer.addListener(data => {
+      lastMag.current = data;
+    });
+
+    Accelerometer.setUpdateInterval(100);
+    Magnetometer.setUpdateInterval(200);
+
+    return () => {
+      accelSub && accelSub.remove();
+      magSub && magSub.remove();
+    };
+  }, []);
+
+  return position;
+}
+
+function calculateHeading(mag: { x: number; y: number; z: number } | null): number {
+  if (!mag) return 0;
+  const { x, y } = mag;
+  let angle = Math.atan2(y, x);
+  angle = angle < 0 ? angle + 2 * Math.PI : angle;
+  return angle;
+}
